@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format-contracts": "prettier --write 'contracts/**/*.sol'"
+    "format-contracts": "prettier --write 'contracts/**/*.sol'",
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,9 @@
     "@typescript-eslint/parser": "^4.29.2",
     "chai": "^4.3.4",
     "eslint": "^7.32.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.4",
     "hardhat": "^2.6.0",
@@ -38,5 +41,8 @@
     "tsconfig-paths": "^3.10.1",
     "typechain": "^5.1.2",
     "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "consola": "^2.15.3"
   }
 }

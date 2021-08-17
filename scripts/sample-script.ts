@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import hre from "hardhat";
+import consola from "utils/consola";
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -19,7 +20,7 @@ async function main() {
 
   await greeter.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  consola.info("Greeter deployed to:", greeter.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -27,6 +28,6 @@ async function main() {
 main()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error(error);
+    consola.error(error);
     process.exit(1);
   });
