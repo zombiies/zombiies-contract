@@ -1,10 +1,11 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Greeter } from "../typechain/Greeter.d";
 
 describe("Greeter", () => {
   it("Should return the new greeting once it's changed", async () => {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
+    const GreeterContract = await ethers.getContractFactory("Greeter");
+    const greeter = (await GreeterContract.deploy("Hello, world!")) as Greeter;
     await greeter.deployed();
 
     expect(await greeter.greet()).to.equal("Hello, world!");
