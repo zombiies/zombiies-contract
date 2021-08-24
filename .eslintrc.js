@@ -13,5 +13,6 @@ module.exports = {
   },
   rules: {
     "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-unused-expressions": "off",
   },
 };
