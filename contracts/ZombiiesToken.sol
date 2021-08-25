@@ -66,6 +66,17 @@ contract ZombiiesToken is
         return super.supportsInterface(interfaceId);
     }
 
+    // Utility functions
+
+    /**
+     * @dev Safely mints with generated token ID and transfers it to `to`.
+     *
+     * Requirements:
+     *
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
     function _awardToken(address to) public onlyOwner returns (uint256) {
         uint256 newTokenId = _tokenIdCounter.current();
         _safeMint(to, newTokenId);
@@ -74,6 +85,15 @@ contract ZombiiesToken is
         return newTokenId;
     }
 
+    /**
+     * @dev Safely mints with generated token ID, specify token URI and transfers it to `to`.
+     *
+     * Requirements:
+     *
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
     function awardToken(address _to, string memory _tokenURI) public onlyOwner {
         uint256 newTokenId = _awardToken(_to);
         _setTokenURI(newTokenId, _tokenURI);
@@ -85,6 +105,9 @@ contract ZombiiesToken is
         string uri;
     }
 
+    /**
+     * @dev return all tokens of an `_address`
+     */
     function allTokensOf(address _address)
         public
         view
@@ -102,6 +125,10 @@ contract ZombiiesToken is
         return tokens;
     }
 
+    /**
+     * @dev find all tokens by token `ids`
+     * revert if not found
+     */
     function tokensByIds(uint256[] memory ids)
         public
         view
@@ -118,6 +145,9 @@ contract ZombiiesToken is
         return tokens;
     }
 
+    /**
+     * @dev return existed token ids in an ids array
+     */
     function _existedIds(uint256[] memory ids)
         private
         view
@@ -142,6 +172,10 @@ contract ZombiiesToken is
         return existedIds;
     }
 
+    /**
+     * @dev find all tokens by token `ids`
+     * ignore not found ids
+     */
     function safeGetTokensById(uint256[] memory ids)
         public
         view
