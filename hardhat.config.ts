@@ -2,6 +2,7 @@ import "tsconfig-paths/register";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
+import "@openzeppelin/hardhat-upgrades";
 
 import { HardhatUserConfig, task } from "hardhat/config";
 import consola from "utils/consola";

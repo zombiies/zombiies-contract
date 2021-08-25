@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { ZombiiesToken } from "../typechain/ZombiiesToken";
 
 describe("Get tokens by an ids array", () => {
@@ -8,7 +8,8 @@ describe("Get tokens by an ids array", () => {
     const ZombiiesTokenContract = await ethers.getContractFactory(
       "ZombiiesToken"
     );
-    const zombiies = (await ZombiiesTokenContract.deploy()) as ZombiiesToken;
+    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
+    const zombiies = (await proxy.deployed()) as ZombiiesToken;
 
     const [, addr1] = await ethers.getSigners();
 
@@ -18,7 +19,7 @@ describe("Get tokens by an ids array", () => {
 
     await Promise.all(
       tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.awardToken(addr1.address, uri);
+        const awardTx = await zombiies.safeMint(addr1.address, uri);
         await awardTx.wait();
       })
     );
@@ -36,7 +37,8 @@ describe("Get tokens by an ids array", () => {
     const ZombiiesTokenContract = await ethers.getContractFactory(
       "ZombiiesToken"
     );
-    const zombiies = (await ZombiiesTokenContract.deploy()) as ZombiiesToken;
+    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
+    const zombiies = (await proxy.deployed()) as ZombiiesToken;
 
     const [, addr1] = await ethers.getSigners();
 
@@ -46,7 +48,7 @@ describe("Get tokens by an ids array", () => {
 
     await Promise.all(
       tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.awardToken(addr1.address, uri);
+        const awardTx = await zombiies.safeMint(addr1.address, uri);
         await awardTx.wait();
       })
     );

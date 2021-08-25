@@ -1,14 +1,15 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
-import { ethers } from "hardhat";
-import { ZombiiesToken } from "../typechain/ZombiiesToken.d";
+import { ethers, upgrades } from "hardhat";
+import { ZombiiesToken } from "../typechain/ZombiiesToken";
 
 describe("Award Token", () => {
   it("Should mints new token", async () => {
     const ZombiiesTokenContract = await ethers.getContractFactory(
       "ZombiiesToken"
     );
-    const zombiies = (await ZombiiesTokenContract.deploy()) as ZombiiesToken;
+    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
+    const zombiies = (await proxy.deployed()) as ZombiiesToken;
 
     const [, addrToAward] = await ethers.getSigners();
     expect(await zombiies.balanceOf(addrToAward.address)).to.equal(
@@ -16,7 +17,7 @@ describe("Award Token", () => {
     );
 
     const tokenURI = "sample-token-uri";
-    const awardTx = await zombiies.awardToken(addrToAward.address, tokenURI);
+    const awardTx = await zombiies.safeMint(addrToAward.address, tokenURI);
     await awardTx.wait();
 
     expect(await zombiies.balanceOf(addrToAward.address)).to.equal(
@@ -36,11 +37,12 @@ describe("Award Token", () => {
     const ZombiiesTokenContract = await ethers.getContractFactory(
       "ZombiiesToken"
     );
-    const zombiies = (await ZombiiesTokenContract.deploy()) as ZombiiesToken;
+    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
+    const zombiies = (await proxy.deployed()) as ZombiiesToken;
 
     const [, notOwner, addrToAward] = await ethers.getSigners();
     expect(
-      zombiies.connect(notOwner).awardToken(addrToAward.address, "token-uri")
+      zombiies.connect(notOwner).safeMint(addrToAward.address, "token-uri")
     ).to.be.revertedWith("Ownable: caller is not the owner");
   });
 });

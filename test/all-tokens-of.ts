@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { ZombiiesToken } from "../typechain/ZombiiesToken.d";
 
 describe("Get all tokens of an address", () => {
@@ -7,7 +7,8 @@ describe("Get all tokens of an address", () => {
     const ZombiiesTokenContract = await ethers.getContractFactory(
       "ZombiiesToken"
     );
-    const zombiies = (await ZombiiesTokenContract.deploy()) as ZombiiesToken;
+    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
+    const zombiies = (await proxy.deployed()) as ZombiiesToken;
 
     const [, addrToAward] = await ethers.getSigners();
 
@@ -17,7 +18,7 @@ describe("Get all tokens of an address", () => {
 
     await Promise.all(
       tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.awardToken(addrToAward.address, uri);
+        const awardTx = await zombiies.safeMint(addrToAward.address, uri);
         await awardTx.wait();
       })
     );
