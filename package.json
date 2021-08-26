@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.0",
-    "@openzeppelin/contracts-upgradeable": "^4.3.0",
-    "consola": "^2.15.3"
+    "@openzeppelin/contracts-upgradeable": "^4.3.0"
   }
 }

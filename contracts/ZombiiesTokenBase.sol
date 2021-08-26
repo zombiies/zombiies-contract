@@ -22,6 +22,7 @@ contract ZombiiesTokenBase is
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
+    uint256 starterPackFee;
 
     function initialize() public initializer {
         __ERC721_init("ZombiiesToken", "ZBT");
@@ -30,6 +31,27 @@ contract ZombiiesTokenBase is
         __Pausable_init();
         __Ownable_init();
         __ERC721Burnable_init();
+        starterPackFee = 0.005 ether;
+    }
+
+    /**
+     * @dev Set starter pack fee.
+     *
+     * Requirements:
+     *
+     * - newFee must greater than 0.
+     *
+     */
+    function setStarterPackFee(uint256 newFee) external onlyOwner {
+        require(newFee > 0);
+        starterPackFee = newFee;
+    }
+
+    /**
+     * @dev Return the current starter pack fee.
+     */
+    function getStarterPackFee() external view returns (uint256) {
+        return starterPackFee;
     }
 
     /**
@@ -149,11 +171,14 @@ contract ZombiiesTokenBase is
      *
      * Emits a {Transfer} event.
      */
-    function _safeMint(address _to, string memory _tokenURI)
+    function _safeMint(address to, string memory _tokenURI)
         internal
         onlyOwner
+        returns (uint256)
     {
-        uint256 newTokenId = _safeMint(_to);
+        uint256 newTokenId = _safeMint(to);
         _setTokenURI(newTokenId, _tokenURI);
+
+        return newTokenId;
     }
 }

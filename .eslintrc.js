@@ -14,5 +14,7 @@ module.exports = {
   rules: {
     "import/no-extraneous-dependencies": "off",
     "@typescript-eslint/no-unused-expressions": "off",
+    "no-console": "off",
+    "import/prefer-default-export": "off",
   },
 };

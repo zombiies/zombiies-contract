@@ -1,34 +1,27 @@
 import { expect } from "chai";
-import { ethers, upgrades } from "hardhat";
-import { ZombiiesToken } from "../typechain/ZombiiesToken.d";
+import { ethers } from "hardhat";
+import { deployTestContract } from "utils/contract";
 
 describe("Get all tokens of an address", () => {
   it("Should return all tokens of an address", async () => {
-    const ZombiiesTokenContract = await ethers.getContractFactory(
-      "ZombiiesToken"
-    );
-    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
-    const zombiies = (await proxy.deployed()) as ZombiiesToken;
+    const zombiies = await deployTestContract();
+    const [, addr1] = await ethers.getSigners();
+    const starterPackFee = await zombiies.getStarterPackFee();
+    const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
 
-    const [, addrToAward] = await ethers.getSigners();
+    expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    const tokenURIsToAward = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
+      value: starterPackFee,
+    });
+    await awardTx.wait();
 
-    expect(await zombiies.allTokensOf(addrToAward.address)).to.be.empty;
-
-    await Promise.all(
-      tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.safeMint(addrToAward.address, uri);
-        await awardTx.wait();
-      })
-    );
-
-    const allTokens = await zombiies.allTokensOf(addrToAward.address);
+    const allTokens = await zombiies.allTokensOf(addr1.address);
     allTokens.forEach((token, index) => {
       const { id, owner, uri } = token;
       expect(id).to.not.be.null;
-      expect(owner).to.eq(addrToAward.address);
-      expect(uri).to.eq(tokenURIsToAward[index]);
+      expect(owner).to.eq(addr1.address);
+      expect(uri).to.eq(tokenURIs[index]);
     });
   });
 });

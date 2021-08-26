@@ -1,28 +1,21 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
-import { ethers, upgrades } from "hardhat";
-import { ZombiiesToken } from "../typechain/ZombiiesToken";
+import { ethers } from "hardhat";
+import { deployTestContract } from "utils/contract";
 
 describe("Get tokens by an ids array without revert if any id is not found", () => {
   it("Should return tokens by ids", async () => {
-    const ZombiiesTokenContract = await ethers.getContractFactory(
-      "ZombiiesToken"
-    );
-    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
-    const zombiies = (await proxy.deployed()) as ZombiiesToken;
-
+    const zombiies = await deployTestContract();
     const [, addr1] = await ethers.getSigners();
-
-    const tokenURIsToAward = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const starterPackFee = await zombiies.getStarterPackFee();
+    const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
 
     expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    await Promise.all(
-      tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.safeMint(addr1.address, uri);
-        await awardTx.wait();
-      })
-    );
+    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
+      value: starterPackFee,
+    });
+    await awardTx.wait();
 
     const addr1Tokens = await zombiies.allTokensOf(addr1.address);
     const ids = addr1Tokens.map((token) => token.id);
@@ -34,24 +27,17 @@ describe("Get tokens by an ids array without revert if any id is not found", () 
   });
 
   it("Should return tokens by ids array ignore not found ids", async () => {
-    const ZombiiesTokenContract = await ethers.getContractFactory(
-      "ZombiiesToken"
-    );
-    const proxy = await upgrades.deployProxy(ZombiiesTokenContract);
-    const zombiies = (await proxy.deployed()) as ZombiiesToken;
-
+    const zombiies = await deployTestContract();
     const [, addr1] = await ethers.getSigners();
-
-    const tokenURIsToAward = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const starterPackFee = await zombiies.getStarterPackFee();
+    const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
 
     expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    await Promise.all(
-      tokenURIsToAward.map(async (uri) => {
-        const awardTx = await zombiies.safeMint(addr1.address, uri);
-        await awardTx.wait();
-      })
-    );
+    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
+      value: starterPackFee,
+    });
+    await awardTx.wait();
 
     const addr1Tokens = await zombiies.allTokensOf(addr1.address);
     const ids = addr1Tokens.map((token) => token.id);

@@ -11,20 +11,16 @@ contract ZombiiesTokenListable is ZombiiesTokenBase {
     }
 
     /**
-     * @dev return all tokens of an `_address`
+     * @dev return all tokens of an `owner`
      */
-    function allTokensOf(address _address)
-        public
-        view
-        returns (Token[] memory)
-    {
-        uint256 tokensCount = balanceOf(_address);
+    function allTokensOf(address owner) public view returns (Token[] memory) {
+        uint256 tokensCount = balanceOf(owner);
         Token[] memory tokens = new Token[](tokensCount);
 
         for (uint256 i = 0; i < tokensCount; i++) {
-            uint256 id = tokenOfOwnerByIndex(_address, i);
+            uint256 id = tokenOfOwnerByIndex(owner, i);
             string memory uri = tokenURI(id);
-            tokens[i] = Token(id, _address, uri);
+            tokens[i] = Token(id, owner, uri);
         }
 
         return tokens;
@@ -53,24 +49,24 @@ contract ZombiiesTokenListable is ZombiiesTokenBase {
     /**
      * @dev return existed token ids in an ids array
      */
-    function _existedIds(uint256[] memory ids)
+    function _existedIds(uint256[] memory tokenIds)
         private
         view
         returns (uint256[] memory)
     {
         uint256 existedCount = 0;
 
-        for (uint256 i = 0; i < ids.length; i++) {
-            if (_exists(ids[i])) {
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            if (_exists(tokenIds[i])) {
                 existedCount++;
             }
         }
 
         uint256[] memory existedIds = new uint256[](existedCount);
 
-        for (uint256 i = 0; i < ids.length; i++) {
-            if (_exists(ids[i])) {
-                existedIds[i] = ids[i];
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            if (_exists(tokenIds[i])) {
+                existedIds[i] = tokenIds[i];
             }
         }
 
@@ -78,15 +74,15 @@ contract ZombiiesTokenListable is ZombiiesTokenBase {
     }
 
     /**
-     * @dev find all tokens by token `ids`
-     * ignore not found ids
+     * @dev find all tokens by token `tokenIds`
+     * ignore not found tokenIds
      */
-    function safeGetTokensById(uint256[] memory ids)
+    function safeGetTokensById(uint256[] memory tokenIds)
         public
         view
         returns (Token[] memory)
     {
-        uint256[] memory existedIds = _existedIds(ids);
+        uint256[] memory existedIds = _existedIds(tokenIds);
         return tokensByIds(existedIds);
     }
 }
