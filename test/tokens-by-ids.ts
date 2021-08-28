@@ -7,14 +7,16 @@ describe("Get tokens by an ids array", () => {
   it("Should return tokens by ids array", async () => {
     const zombiies = await deployTestContract();
     const [, addr1] = await ethers.getSigners();
-    const starterPackFee = await zombiies.getStarterPackFee();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const proofURI = "ipfs://proofURI";
 
     expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
-      value: starterPackFee,
-    });
+    const awardTx = await zombiies.buyStarterPack(
+      addr1.address,
+      tokenURIs,
+      proofURI
+    );
     await awardTx.wait();
 
     const addr1Tokens = await zombiies.allTokensOf(addr1.address);
@@ -29,14 +31,16 @@ describe("Get tokens by an ids array", () => {
   it("Should revert if any id is not found", async () => {
     const zombiies = await deployTestContract();
     const [, addr1] = await ethers.getSigners();
-    const starterPackFee = await zombiies.getStarterPackFee();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const proofURI = "ipfs://proofURI";
 
     expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
-      value: starterPackFee,
-    });
+    const awardTx = await zombiies.buyStarterPack(
+      addr1.address,
+      tokenURIs,
+      proofURI
+    );
     await awardTx.wait();
 
     const addr1Tokens = await zombiies.allTokensOf(addr1.address);

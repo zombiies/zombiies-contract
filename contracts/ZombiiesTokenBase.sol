@@ -22,7 +22,24 @@ contract ZombiiesTokenBase is
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
+    string factoryURI;
     uint256 starterPackFee;
+    uint8 countToLevelUp;
+
+    /**
+     * @dev This event is emitted every time `factoryURI` is changed.
+     */
+    event FactoryURIChanged(string newURI);
+
+    /**
+     * @dev This event is emitted every time `starterPackFee` is changed.
+     */
+    event StarterPackFeeChanged(uint256 newFee);
+
+    /**
+     * @dev This event is emitted every time `countToLevelUp` is changed.
+     */
+    event CountToLevelUpChanged(uint256 newCount);
 
     function initialize() public initializer {
         __ERC721_init("ZombiiesToken", "ZBT");
@@ -31,7 +48,6 @@ contract ZombiiesTokenBase is
         __Pausable_init();
         __Ownable_init();
         __ERC721Burnable_init();
-        starterPackFee = 0.005 ether;
     }
 
     /**
@@ -45,6 +61,7 @@ contract ZombiiesTokenBase is
     function setStarterPackFee(uint256 newFee) external onlyOwner {
         require(newFee > 0);
         starterPackFee = newFee;
+        emit StarterPackFeeChanged(newFee);
     }
 
     /**
@@ -52,6 +69,36 @@ contract ZombiiesTokenBase is
      */
     function getStarterPackFee() external view returns (uint256) {
         return starterPackFee;
+    }
+
+    /**
+     * @dev Return the current card factory URI.
+     */
+    function getFactoryURI() external view returns (string memory) {
+        return factoryURI;
+    }
+
+    /**
+     * @dev Set card factory URI.
+     */
+    function setFactoryURI(string memory newURI) external onlyOwner {
+        factoryURI = newURI;
+        emit FactoryURIChanged(newURI);
+    }
+
+    /**
+     * @dev Return the current card factory URI.
+     */
+    function getCountToLevelUp() external view returns (uint8) {
+        return countToLevelUp;
+    }
+
+    /**
+     * @dev Set card factory URI.
+     */
+    function setCountToLevelUp(uint8 newCount) external onlyOwner {
+        countToLevelUp = newCount;
+        emit CountToLevelUpChanged(newCount);
     }
 
     /**

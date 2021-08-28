@@ -6,14 +6,16 @@ describe("Get all tokens of an address", () => {
   it("Should return all tokens of an address", async () => {
     const zombiies = await deployTestContract();
     const [, addr1] = await ethers.getSigners();
-    const starterPackFee = await zombiies.getStarterPackFee();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
+    const proofURI = "ipfs://proofURI";
 
     expect(await zombiies.allTokensOf(addr1.address)).to.be.empty;
 
-    const awardTx = await zombiies.buyStarterPack(addr1.address, tokenURIs, {
-      value: starterPackFee,
-    });
+    const awardTx = await zombiies.buyStarterPack(
+      addr1.address,
+      tokenURIs,
+      proofURI
+    );
     await awardTx.wait();
 
     const allTokens = await zombiies.allTokensOf(addr1.address);

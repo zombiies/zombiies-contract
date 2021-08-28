@@ -5,20 +5,45 @@ import "./ZombiiesTokenBase.sol";
 
 contract ZombiiesTokenMintable is ZombiiesTokenBase {
     /**
-     * @dev Require enough `fee`.
-     */
-    modifier enoughFee(uint256 fee) {
-        require(msg.value == fee, "Not enough fee");
-        _;
-    }
-
-    /**
      * @dev This event is emitted every time a starter pack is bought.
      */
-    event StarterPackBought(address indexed buyer, uint256[] tokenIds);
+    event StarterPackBought(
+        address indexed buyer,
+        uint256[] tokenIds,
+        string proofURI
+    );
+
+    /**
+     * @dev This event is emitted every time a `player` level up card.
+     */
+    event LevelUp(address indexed player, uint256 newCardId, string proofURI);
+
+    /**
+     * @dev This event is emitted every time a `player` received a award after a win match.
+     */
+    event Awarded(address indexed player, uint256 tokenId, string proofURI);
+
+    /**
+     * @dev This event is emitted every time a `player` start an auction.
+     */
+    event AuctionStarted(
+        address indexed player,
+        uint256 tokenId,
+        string proofURI
+    );
+
+    /**
+     * @dev This event is emitted every time a auction is end.
+     */
+    event AuctionEnded(
+        address indexed winner,
+        uint256 tokenId,
+        string proofURI
+    );
 
     /**
      * @dev Safely mints with generated token ID, specify `tokenURIs` and transfers it to `to`.
+     * `proofURI` is an ipfs uri of the proof of ownership.
      *
      * Requirements:
      *
@@ -26,11 +51,11 @@ contract ZombiiesTokenMintable is ZombiiesTokenBase {
      *
      * Emits a {StarterPackBought} event.
      */
-    function buyStarterPack(address to, string[] memory tokenURIs)
-        external
-        payable
-        enoughFee(starterPackFee)
-    {
+    function buyStarterPack(
+        address to,
+        string[] memory tokenURIs,
+        string memory proofURI
+    ) external onlyOwner {
         require(balanceOf(to) == 0, "Already bought starter pack");
 
         uint256[] memory tokenIds = new uint256[](tokenURIs.length);
@@ -39,6 +64,68 @@ contract ZombiiesTokenMintable is ZombiiesTokenBase {
             tokenIds[i] = _safeMint(to, tokenURIs[i]);
         }
 
-        emit StarterPackBought(to, tokenIds);
+        emit StarterPackBought(to, tokenIds, proofURI);
+    }
+
+    /**
+     * @dev Safe mints new card with higher level of sacrifices cards.
+     */
+    function levelUp(
+        address to,
+        uint256[] memory sacrificesIds,
+        string memory newTokenURI,
+        string memory proofURI
+    ) external onlyOwner {
+        require(
+            sacrificesIds.length == countToLevelUp,
+            "Not enough sacrifices"
+        );
+
+        for (uint256 i = 0; i < sacrificesIds.length; i++) {
+            _burn(sacrificesIds[i]);
+        }
+
+        uint256 newCardId = _safeMint(to, newTokenURI);
+
+        emit LevelUp(to, newCardId, proofURI);
+    }
+
+    /**
+     * @dev Safe mints new card and award to `to` after a win match.
+     */
+    function award(
+        address to,
+        string memory tokenURI,
+        string memory proofURI
+    ) external onlyOwner {
+        uint256 tokenId = _safeMint(to, tokenURI);
+
+        emit Awarded(to, tokenId, proofURI);
+    }
+
+    /**
+     * @dev Start an auction by sending the token to the owner.
+     */
+    function startAuction(
+        address from,
+        uint256 tokenId,
+        string memory proofURI
+    ) external {
+        safeTransferFrom(from, owner(), tokenId);
+
+        emit AuctionStarted(from, tokenId, proofURI);
+    }
+
+    /**
+     * @dev End an auction and send token to owner.
+     */
+    function endAuction(
+        address winner,
+        uint256 tokenId,
+        string memory proofURI
+    ) external onlyOwner {
+        safeTransferFrom(owner(), winner, tokenId);
+
+        emit AuctionEnded(winner, tokenId, proofURI);
     }
 }
