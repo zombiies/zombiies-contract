@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { deployTestContract } from "utils/contract";
+import { deployContract } from "utils/contract";
 
 describe("Buy starter pack", () => {
   it("Should mints new tokens in starter pack", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, buyer] = await ethers.getSigners();
 
     expect(await zombiies.balanceOf(buyer.address)).to.equal(BigNumber.from(0));

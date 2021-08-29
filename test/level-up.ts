@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployTestContract } from "utils/contract";
+import { deployContract } from "utils/contract";
 
 describe("Level Up", () => {
   it("Should level up the card", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, player] = await ethers.getSigners();
 
     const tokenURIs = [
@@ -33,7 +33,7 @@ describe("Level Up", () => {
   });
 
   it("Should revert if not enough sacrifices", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, player] = await ethers.getSigners();
 
     const tokenURIs = [

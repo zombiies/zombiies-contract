@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployTestContract } from "utils/contract";
+import { deployContract } from "utils/contract";
 
 describe("Award", () => {
   it("Should award new card", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, player] = await ethers.getSigners();
 
     const tokenURI = "ipfs://QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u";
@@ -17,7 +17,7 @@ describe("Award", () => {
   });
 
   it("Should revert if not owner", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, player] = await ethers.getSigners();
 
     const tokenURI = "ipfs://QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u";

@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { deployTestContract } from "utils/contract";
+import { deployContract } from "utils/contract";
 
 describe("Get tokens by an ids array without revert if any id is not found", () => {
   it("Should return tokens by ids", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, addr1] = await ethers.getSigners();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
     const proofURI = "ipfs://proofURI";
@@ -29,7 +29,7 @@ describe("Get tokens by an ids array without revert if any id is not found", () 
   });
 
   it("Should return tokens by ids array ignore not found ids", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, addr1] = await ethers.getSigners();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
     const proofURI = "ipfs://proofURI";

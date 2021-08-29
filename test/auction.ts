@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployTestContract } from "utils/contract";
+import { deployContract } from "utils/contract";
 
 describe("Auction", () => {
   it("Should start auction", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [owner, addr1] = await ethers.getSigners();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
     const proofURI = "ipfs://proofURI";
@@ -27,7 +27,7 @@ describe("Auction", () => {
   });
 
   it("Should end auction", async () => {
-    const zombiies = await deployTestContract();
+    const zombiies = await deployContract();
     const [, addr1, winner] = await ethers.getSigners();
     const tokenURIs = ["uri-1", "uri-2", "uri-3", "uri-4"];
     const proofURI = "ipfs://proofURI";

@@ -1,7 +1,7 @@
 import { ethers, upgrades } from "hardhat";
 import { ZombiiesToken } from "../typechain/ZombiiesToken";
 
-export const deployTestContract = async (): Promise<ZombiiesToken> => {
+export const deployContract = async (): Promise<ZombiiesToken> => {
   const ZombiiesTokenContract = await ethers.getContractFactory(
     "ZombiiesToken"
   );
