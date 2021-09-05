@@ -1,9 +1,9 @@
-import { deployContract } from "utils/contract";
+import { deployContract } from 'utils/contract';
 
 async function main() {
   const zombiies = await deployContract();
 
-  console.info("Zombiies deployed to:", zombiies.address);
+  console.info('Zombiies deployed to:', zombiies.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

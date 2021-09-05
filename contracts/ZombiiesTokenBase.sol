@@ -218,14 +218,7 @@ contract ZombiiesTokenBase is
      *
      * Emits a {Transfer} event.
      */
-    function _safeMint(address to, string memory _tokenURI)
-        internal
-        onlyOwner
-        returns (uint256)
-    {
-        uint256 newTokenId = _safeMint(to);
-        _setTokenURI(newTokenId, _tokenURI);
-
-        return newTokenId;
+    function _safeMint(address to, string memory _tokenURI) internal onlyOwner {
+        _setTokenURI(_safeMint(to), _tokenURI);
     }
 }

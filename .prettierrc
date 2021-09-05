@@ -12,5 +12,6 @@
       }
     }
   ],
-  "semi": true
+  "semi": true,
+  "singleQuote": true
 }

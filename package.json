@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format-contracts": "prettier --write 'contracts/**/*.sol'",
+    "format": "prettier --write '**/*.{sol,ts}'",
     "lint": "eslint . --ext .ts"
   },
   "repository": {

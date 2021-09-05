@@ -1,17 +1,17 @@
-import { expect } from "chai";
-import { BigNumber } from "ethers";
-import { ethers } from "hardhat";
-import { deployContract } from "utils/contract";
+import { expect } from 'chai';
+import { BigNumber } from 'ethers';
+import { ethers } from 'hardhat';
+import { deployContract, getTokenUrisFromReceipt } from 'utils/contract';
 
-describe("Buy starter pack", () => {
-  it("Should mints new tokens in starter pack", async () => {
+describe('Buy starter pack', () => {
+  it('Should mints new tokens in starter pack', async () => {
     const zombiies = await deployContract();
     const [, buyer] = await ethers.getSigners();
 
     expect(await zombiies.balanceOf(buyer.address)).to.equal(BigNumber.from(0));
 
-    const tokenURIs = ["sample-token-uri"];
-    const proofURI = "ipfs://proofURI";
+    const tokenURIs = ['sample-token-uri-1', 'sample-token-uri-2'];
+    const proofURI = 'ipfs://proofURI';
     const awardTx = await zombiies.buyStarterPack(
       buyer.address,
       tokenURIs,
@@ -23,8 +23,16 @@ describe("Buy starter pack", () => {
       BigNumber.from(tokenURIs.length)
     );
 
+    const returnedUris = await getTokenUrisFromReceipt(zombiies, receipt);
+    expect(returnedUris.length).to.eq(tokenURIs.length);
+    expect(
+      returnedUris.every((returned) =>
+        tokenURIs.some((uri) => returned === uri)
+      )
+    ).to.be.true;
+
     const starterPackBoughtEvent = receipt.events?.find(
-      (e) => e.event === "StarterPackBought"
+      (e) => e.event === 'StarterPackBought'
     );
 
     expect(starterPackBoughtEvent).to.exist;
@@ -38,15 +46,7 @@ describe("Buy starter pack", () => {
       return;
     }
 
-    const { buyer: buyerAddress, tokenIds } = args;
-
-    expect(buyerAddress).to.eq(buyer.address);
-
-    const tokens = await zombiies.tokensByIds(tokenIds);
-    const receivedTokenURIs = tokens.map((token) => token.uri);
-    expect(receivedTokenURIs.length).to.equal(tokenURIs.length);
-
-    expect(tokenURIs.every((uri, i) => receivedTokenURIs[i] === uri)).to.be
-      .true;
+    const { proofURI: returnedProofURI } = args;
+    expect(returnedProofURI).to.eq(proofURI);
   });
 });
