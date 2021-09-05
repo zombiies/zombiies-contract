@@ -3,6 +3,7 @@ import '@typechain/hardhat';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-waffle';
 import '@openzeppelin/hardhat-upgrades';
+import 'hardhat-abi-exporter';
 
 import { HardhatUserConfig, task } from 'hardhat/config';
 
