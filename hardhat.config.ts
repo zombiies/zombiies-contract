@@ -10,8 +10,8 @@ import { cleanEnv, str } from 'envalid';
 
 dotEnvConfig();
 
-const { API_URL, PRIVATE_KEY } = cleanEnv(process.env, {
-  API_URL: str(),
+const { NETWORK_URL, PRIVATE_KEY } = cleanEnv(process.env, {
+  NETWORK_URL: str(),
   PRIVATE_KEY: str(),
 });
 
@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {},
     testnet: {
-      url: API_URL,
+      url: NETWORK_URL,
       accounts: [PRIVATE_KEY],
     },
   },
