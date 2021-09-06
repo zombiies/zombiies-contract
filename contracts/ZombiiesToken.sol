@@ -114,4 +114,18 @@ contract ZombiiesToken is ZombiiesTokenBase {
 
         emit AuctionEnded(proofURI);
     }
+
+    /**
+     * @dev Returns all the tokenIds owned by the given address.
+     */
+    function tokensOf(address owner) external view returns (uint256[] memory) {
+        uint256 balance = balanceOf(owner);
+        uint256[] memory tokens = new uint256[](balance);
+
+        for (uint256 i = 0; i < balance; i++) {
+            tokens[i] = tokenOfOwnerByIndex(owner, i);
+        }
+
+        return tokens;
+    }
 }

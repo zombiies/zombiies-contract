@@ -6,7 +6,9 @@
   "scripts": {
     "format-contracts": "prettier --write 'contracts/**/*.sol'",
     "format": "prettier --write '**/*.{sol,ts}'",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "compile": "hardhat clean && hardhat compile",
+    "test": "hardhat test"
   },
   "repository": {
     "type": "git",
