@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { deployContract, getTokenIdsFromReceipt } from '../utils/contract';
 
 describe('Tokens of', () => {
-  it('Should returns all tokenIds owned by the given address', async () => {
+  it('Should returns all tokens owned by the given address', async () => {
     const zombiies = await deployContract();
     const [, addr] = await ethers.getSigners();
 
@@ -18,11 +18,12 @@ describe('Tokens of', () => {
     ).wait();
 
     const tokenIds = getTokenIdsFromReceipt(buyPackReceipt);
-    const ownedTokenIds = await zombiies.tokensOf(addr.address);
+    const ownedTokens = await zombiies.tokensOf(addr.address);
 
-    expect(ownedTokenIds.length).to.eq(tokenIds.length);
-    expect(
-      ownedTokenIds.every((ownedId) => tokenIds.some((id) => id.eq(ownedId)))
-    ).to.be.true;
+    expect(ownedTokens.length).to.eq(tokenIds.length);
+    expect(ownedTokens.every(({ id }) => tokenIds.some((tId) => tId.eq(id)))).to
+      .be.true;
+
+    expect(ownedTokens.every(({ uri }) => tokenURIs.includes(uri))).to.be.true;
   });
 });

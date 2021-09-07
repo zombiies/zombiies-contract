@@ -3,6 +3,11 @@ pragma solidity ^0.8.2;
 
 import "./ZombiiesTokenBase.sol";
 
+struct Token {
+    uint256 id;
+    string uri;
+}
+
 contract ZombiiesToken is ZombiiesTokenBase {
     /**
      * @dev This event is emitted every time a starter pack is bought.
@@ -116,14 +121,20 @@ contract ZombiiesToken is ZombiiesTokenBase {
     }
 
     /**
-     * @dev Returns all the tokenIds owned by the given address.
+     * @dev Returns all the tokenIds and tokenUris owned by the given address.
      */
-    function tokensOf(address owner) external view returns (uint256[] memory) {
+    function tokensOf(address owner) external view returns (Token[] memory) {
         uint256 balance = balanceOf(owner);
-        uint256[] memory tokens = new uint256[](balance);
+        uint256[] memory ids = new uint256[](balance);
 
         for (uint256 i = 0; i < balance; i++) {
-            tokens[i] = tokenOfOwnerByIndex(owner, i);
+            ids[i] = tokenOfOwnerByIndex(owner, i);
+        }
+
+        Token[] memory tokens = new Token[](balance);
+
+        for (uint256 i = 0; i < balance; i++) {
+            tokens[i] = Token({id: ids[i], uri: tokenURI(ids[i])});
         }
 
         return tokens;
