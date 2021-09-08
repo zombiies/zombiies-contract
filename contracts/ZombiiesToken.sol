@@ -25,11 +25,6 @@ contract ZombiiesToken is ZombiiesTokenBase {
     event Awarded(string proofURI);
 
     /**
-     * @dev This event is emitted every time a `player` start an auction.
-     */
-    event AuctionStarted(string proofURI);
-
-    /**
      * @dev This event is emitted every time a auction is end.
      */
     event AuctionEnded(string proofURI);
@@ -95,19 +90,6 @@ contract ZombiiesToken is ZombiiesTokenBase {
     }
 
     /**
-     * @dev Start an auction by sending the token to the owner.
-     */
-    function startAuction(
-        address from,
-        uint256 tokenId,
-        string memory proofURI
-    ) external {
-        safeTransferFrom(from, owner(), tokenId);
-
-        emit AuctionStarted(proofURI);
-    }
-
-    /**
      * @dev End an auction and send token to owner.
      */
     function endAuction(
@@ -118,6 +100,20 @@ contract ZombiiesToken is ZombiiesTokenBase {
         safeTransferFrom(owner(), winner, tokenId);
 
         emit AuctionEnded(proofURI);
+    }
+
+    function tokensIn(uint256[] memory tokenIds)
+        public
+        view
+        returns (Token[] memory)
+    {
+        Token[] memory tokens = new Token[](tokenIds.length);
+
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            tokens[i] = Token({id: tokenIds[i], uri: tokenURI(tokenIds[i])});
+        }
+
+        return tokens;
     }
 
     /**
@@ -131,12 +127,6 @@ contract ZombiiesToken is ZombiiesTokenBase {
             ids[i] = tokenOfOwnerByIndex(owner, i);
         }
 
-        Token[] memory tokens = new Token[](balance);
-
-        for (uint256 i = 0; i < balance; i++) {
-            tokens[i] = Token({id: ids[i], uri: tokenURI(ids[i])});
-        }
-
-        return tokens;
+        return tokensIn(ids);
     }
 }
