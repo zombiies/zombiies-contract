@@ -22,7 +22,6 @@ contract ZombiiesTokenBase is
     CountersUpgradeable.Counter private _tokenIdCounter;
     string factoryURI;
     uint256 starterPackFee;
-    uint8 countToLevelUp;
 
     /**
      * @dev This event is emitted every time `factoryURI` is changed.
@@ -33,11 +32,6 @@ contract ZombiiesTokenBase is
      * @dev This event is emitted every time `starterPackFee` is changed.
      */
     event StarterPackFeeChanged(uint256 newFee);
-
-    /**
-     * @dev This event is emitted every time `countToLevelUp` is changed.
-     */
-    event CountToLevelUpChanged(uint256 newCount);
 
     function initialize() public initializer {
         __ERC721_init("ZombiiesToken", "ZBT");
@@ -81,21 +75,6 @@ contract ZombiiesTokenBase is
     function setFactoryURI(string memory newURI) external onlyOwner {
         factoryURI = newURI;
         emit FactoryURIChanged(newURI);
-    }
-
-    /**
-     * @dev Return the current card factory URI.
-     */
-    function getCountToLevelUp() external view returns (uint8) {
-        return countToLevelUp;
-    }
-
-    /**
-     * @dev Set card factory URI.
-     */
-    function setCountToLevelUp(uint8 newCount) external onlyOwner {
-        countToLevelUp = newCount;
-        emit CountToLevelUpChanged(newCount);
     }
 
     // The following functions are overrides required by Solidity.

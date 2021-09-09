@@ -25,11 +25,6 @@ contract ZombiiesToken is ZombiiesTokenBase {
     event Awarded(string proofURI);
 
     /**
-     * @dev This event is emitted every time a auction is end.
-     */
-    event AuctionEnded(string proofURI);
-
-    /**
      * @dev Safely mints with generated token ID, specify `tokenURIs` and transfers it to `to`.
      * `proofURI` is an ipfs uri of the proof of ownership.
      *
@@ -58,17 +53,14 @@ contract ZombiiesToken is ZombiiesTokenBase {
      */
     function levelUp(
         address to,
-        uint256[] memory sacrificesIds,
+        uint256[] memory sacrificeIds,
         string memory newTokenURI,
         string memory proofURI
     ) external onlyOwner {
-        require(
-            sacrificesIds.length == countToLevelUp,
-            "Not enough sacrifices"
-        );
+        require(sacrificeIds.length == 2, "Not enough sacrifices");
 
-        for (uint256 i = 0; i < sacrificesIds.length; i++) {
-            _burn(sacrificesIds[i]);
+        for (uint256 i = 0; i < sacrificeIds.length; i++) {
+            _burn(sacrificeIds[i]);
         }
 
         _safeMint(to, newTokenURI);
@@ -87,19 +79,6 @@ contract ZombiiesToken is ZombiiesTokenBase {
         _safeMint(to, tokenURI);
 
         emit Awarded(proofURI);
-    }
-
-    /**
-     * @dev End an auction and send token to owner.
-     */
-    function endAuction(
-        address winner,
-        uint256 tokenId,
-        string memory proofURI
-    ) external onlyOwner {
-        safeTransferFrom(owner(), winner, tokenId);
-
-        emit AuctionEnded(proofURI);
     }
 
     function tokensIn(uint256[] memory tokenIds)
