@@ -20,18 +20,18 @@ contract ZombiiesTokenBase is
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
-    string factoryURI;
-    uint256 starterPackFee;
+    string private _factoryURI;
+    uint256 private _mintFee;
 
     /**
-     * @dev This event is emitted every time `factoryURI` is changed.
+     * @dev This event is emitted every time `_factoryURI` is changed.
      */
     event FactoryURIChanged(string newURI);
 
     /**
-     * @dev This event is emitted every time `starterPackFee` is changed.
+     * @dev This event is emitted every time `_mintFee` is changed.
      */
-    event StarterPackFeeChanged(uint256 newFee);
+    event MintFeeChanged(uint256 newFee);
 
     function initialize() public initializer {
         __ERC721_init("ZombiiesToken", "ZBT");
@@ -42,38 +42,38 @@ contract ZombiiesTokenBase is
     }
 
     /**
-     * @dev Set starter pack fee.
+     * @dev Set new mint fee.
      *
      * Requirements:
      *
      * - newFee must greater than 0.
      *
      */
-    function setStarterPackFee(uint256 newFee) external onlyOwner {
+    function setMintFee(uint256 newFee) external onlyOwner {
         require(newFee > 0);
-        starterPackFee = newFee;
-        emit StarterPackFeeChanged(newFee);
+        _mintFee = newFee;
+        emit MintFeeChanged(newFee);
     }
 
     /**
-     * @dev Return the current starter pack fee.
+     * @dev Return the current mint fee.
      */
-    function getStarterPackFee() external view returns (uint256) {
-        return starterPackFee;
+    function getMintFee() external view returns (uint256) {
+        return _mintFee;
     }
 
     /**
      * @dev Return the current card factory URI.
      */
     function getFactoryURI() external view returns (string memory) {
-        return factoryURI;
+        return _factoryURI;
     }
 
     /**
      * @dev Set card factory URI.
      */
     function setFactoryURI(string memory newURI) external onlyOwner {
-        factoryURI = newURI;
+        _factoryURI = newURI;
         emit FactoryURIChanged(newURI);
     }
 

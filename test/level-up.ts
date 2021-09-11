@@ -19,7 +19,9 @@ describe('Level Up', () => {
     ];
     const proofURI = 'ipfs://proofURI';
 
-    const sacrificeIds = (await mintTokens(zombiies, tokenURIs, player.address)).slice(0, 2);
+    const sacrificeIds = (
+      await mintTokens(zombiies, tokenURIs, player.address)
+    ).slice(0, 2);
 
     const levelUpURI = 'ipfs://levelUpURI';
     const tx = await zombiies.levelUp(
@@ -54,7 +56,9 @@ describe('Level Up', () => {
     ];
     const proofURI = 'ipfs://proofURI';
 
-    const sacrificeIds = (await mintTokens(zombiies, tokenURIs, player.address)).slice(0, 1);
+    const sacrificeIds = (
+      await mintTokens(zombiies, tokenURIs, player.address)
+    ).slice(0, 1);
 
     const levelUpURI = 'ipfs://levelUpURI';
     expect(
