@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { deployContract, getTokenIdsFromReceipt } from '../utils/contract';
+import { deployContract, mintTokens } from '../utils/contract';
 
 describe('Tokens of', () => {
   it('Should returns all tokens owned by the given address', async () => {
@@ -12,12 +12,8 @@ describe('Tokens of', () => {
       'sample-token-uri',
       'sample-token-uri',
     ];
-    const proofURI = 'ipfs://proofURI';
-    const buyPackReceipt = await (
-      await zombiies.buyStarterPack(addr.address, tokenURIs, proofURI)
-    ).wait();
 
-    const tokenIds = getTokenIdsFromReceipt(buyPackReceipt);
+    const tokenIds = await mintTokens(zombiies, tokenURIs, addr.address);
     const ownedTokens = await zombiies.tokensOf(addr.address);
 
     expect(ownedTokens.length).to.eq(tokenIds.length);

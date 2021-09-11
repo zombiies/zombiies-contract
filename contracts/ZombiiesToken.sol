@@ -10,43 +10,14 @@ struct Token {
 
 contract ZombiiesToken is ZombiiesTokenBase {
     /**
-     * @dev This event is emitted every time a starter pack is bought.
-     */
-    event StarterPackBought(string proofURI);
-
-    /**
      * @dev This event is emitted every time a `player` level up card.
      */
     event LevelUp(string proofURI);
 
     /**
-     * @dev This event is emitted every time a `player` received a award after a win match.
+     * @dev This event is emitted every time a `player` mint a new token.
      */
-    event Awarded(string proofURI);
-
-    /**
-     * @dev Safely mints with generated token ID, specify `tokenURIs` and transfers it to `to`.
-     * `proofURI` is an ipfs uri of the proof of ownership.
-     *
-     * Requirements:
-     *
-     * - If `_to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
-     *
-     * Emits a {StarterPackBought} event.
-     */
-    function buyStarterPack(
-        address to,
-        string[] memory tokenURIs,
-        string memory proofURI
-    ) external onlyOwner {
-        require(balanceOf(to) == 0, "Already bought starter pack");
-
-        for (uint256 i = 0; i < tokenURIs.length; i++) {
-            _safeMint(to, tokenURIs[i]);
-        }
-
-        emit StarterPackBought(proofURI);
-    }
+    event SafeMint(string proofURI);
 
     /**
      * @dev Safe mints new card with higher level of sacrifices cards.
@@ -69,16 +40,16 @@ contract ZombiiesToken is ZombiiesTokenBase {
     }
 
     /**
-     * @dev Safe mints new card and award to `to` after a win match.
+     * @dev Safe mints new card and transfer to `to`.
      */
-    function award(
+    function safeMint(
         address to,
         string memory tokenURI,
         string memory proofURI
     ) external onlyOwner {
         _safeMint(to, tokenURI);
 
-        emit Awarded(proofURI);
+        emit SafeMint(proofURI);
     }
 
     function tokensIn(uint256[] memory tokenIds)

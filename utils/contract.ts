@@ -56,3 +56,24 @@ export const getTokenUrisFromReceipt = async (
     contract,
     getTokenIdsFromReceipt(receipt, middleware)
   );
+
+export const mintTokens = async (
+  contract: ZombiiesToken,
+  tokenUris: string[],
+  toAddress: string
+): Promise<BigNumber[]> => {
+  const tokenIds = [];
+
+  // @dev: Must use `for await` to avoid error code -32000
+  // eslint-disable-next-line no-restricted-syntax
+  for (const tokenUri of tokenUris) {
+    // eslint-disable-next-line no-await-in-loop
+    const receipt = await (
+      // eslint-disable-next-line no-await-in-loop
+      await contract.safeMint(toAddress, tokenUri, 'Test')
+    ).wait();
+    tokenIds.push(...getTokenIdsFromReceipt(receipt));
+  }
+
+  return tokenIds;
+};

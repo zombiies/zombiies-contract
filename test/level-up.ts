@@ -3,8 +3,8 @@ import { ethers } from 'hardhat';
 import {
   ADDRESS_ZERO,
   deployContract,
-  getTokenIdsFromReceipt,
   getTokenUrisFromReceipt,
+  mintTokens,
 } from '../utils/contract';
 
 describe('Level Up', () => {
@@ -18,12 +18,8 @@ describe('Level Up', () => {
       'sample-token-uri',
     ];
     const proofURI = 'ipfs://proofURI';
-    const buyPackReceipt = await (
-      await zombiies.buyStarterPack(player.address, tokenURIs, proofURI)
-    ).wait();
-    await (await zombiies.setCountToLevelUp(3)).wait();
 
-    const sacrificeIds = getTokenIdsFromReceipt(buyPackReceipt);
+    const sacrificeIds = (await mintTokens(zombiies, tokenURIs, player.address)).slice(0, 2);
 
     const levelUpURI = 'ipfs://levelUpURI';
     const tx = await zombiies.levelUp(
@@ -57,12 +53,8 @@ describe('Level Up', () => {
       'sample-token-uri',
     ];
     const proofURI = 'ipfs://proofURI';
-    const buyPackReceipt = await (
-      await zombiies.buyStarterPack(player.address, tokenURIs, proofURI)
-    ).wait();
-    await (await zombiies.setCountToLevelUp(4)).wait();
 
-    const sacrificeIds = getTokenIdsFromReceipt(buyPackReceipt);
+    const sacrificeIds = (await mintTokens(zombiies, tokenURIs, player.address)).slice(0, 1);
 
     const levelUpURI = 'ipfs://levelUpURI';
     expect(
